@@ -71,7 +71,7 @@ class Entity
 public:
 	char pad_0000[0x2F0]; //0x0000
 	class PawnPrivate* PawnPrivate; //0x2F0
-	char pad_02F8[56]; //0x02F8
+	char pad_02F8[120]; //0x02F8
 	wchar_t* playername; //0x0370	
 	char pad_0378[136]; //0x0378
 	ETeam Team; //0x03a0

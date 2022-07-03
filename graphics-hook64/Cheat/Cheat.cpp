@@ -1,7 +1,7 @@
 #include "Cheat.h"
 #include "../BoneFNames.h"
 #include <fstream>
-void drawbone(PlayerController* pcontroller, Entity* EnemyEnt, AHud* hud, int bone1, int bone2) {
+void drawbone(PlayerController* pcontroller, Entity* EnemyEnt, AHud* hud, int bone1, int bone2 , bool healthprotections) {
 	FVector2D BoneStart;
 	FVector2D BoneEnd;
 	FVector	postargt;
@@ -14,7 +14,14 @@ void drawbone(PlayerController* pcontroller, Entity* EnemyEnt, AHud* hud, int bo
 	{
 		if (pcontroller->WorldToScreen( postargt2, &BoneEnd))
 		{
-			hud->DrawLine( BoneStart, BoneEnd, 2, Cheat::skeletoncolor);	
+			if (healthprotections)
+			{
+				hud->DrawLine(BoneStart, BoneEnd, 2, {255,0,0,255});
+			}
+			else
+			{
+				hud->DrawLine(BoneStart, BoneEnd, 2, Cheat::skeletoncolor);
+			}
 		}				
 	}
 }
@@ -130,29 +137,45 @@ void Cheat::Update(AHud* hud, GEngine* gEngine) {
 		if (!playerPawn) continue;
 		auto HealthStateComponent = playerPawn->HealthStateComponent;
 		if (!HealthStateComponent) continue;
-
 		if (!HealthStateComponent->bIsAlive) continue;
-		//if (localplayerstate->Team == player->Team) continue;
+		if (localplayerstate->Team == player->Team) continue;
 		Mesh* mesh = playerPawn->mesh;
 		if (!mesh) continue;
-		FVector headloc;
 		FVector2D headlocscr;
-		mesh->get_bone_location(&headloc, BoneFNames::neck_01);
-		if (playercontroller->WorldToScreen(headloc, &headlocscr))
+		FVector pos;
+		mesh->get_bone_location(&pos, BoneFNames::neck_01);
+		if (playercontroller->WorldToScreen(pos, &headlocscr))
 		{
-			std::cout << "WorldToScreen: " << headlocscr.X << std::endl;
 			if (nameesp)
-			{
-				hud->HDrawText(FString(player->playername), { 0,1,0,1 }, headlocscr.X, headlocscr.Y, gEngine->MediumFont, 1, false);
-			}
-
+				hud->HDrawText(FString{ player->playername }, {0,255,0,255}, headlocscr.X, headlocscr.Y, gEngine->MediumFont, 0.97f, false);
 			if (geyskeletonactive)
 			{
-				for (int i = 0; i < 192; i++)
-				{
-					const wchar_t* widecstr = std::to_wstring(i).c_str();
-					hud->HDrawText(FString(widecstr), { 0,1,0,1 }, headlocscr.X, headlocscr.Y, gEngine->MediumFont, 1, true);
-				}
+
+					//midle	
+					drawbone(playercontroller, player, hud, BoneFNames::Head, BoneFNames::neck_01, HealthStateComponent->bHealthProtection);
+					drawbone(playercontroller, player, hud, BoneFNames::neck_01, BoneFNames::spine_01, HealthStateComponent->bHealthProtection);
+					drawbone(playercontroller, player, hud, BoneFNames::spine_01, BoneFNames::spine_02, HealthStateComponent->bHealthProtection);
+					drawbone(playercontroller, player, hud, BoneFNames::spine_01, BoneFNames::spine_03, HealthStateComponent->bHealthProtection);
+					//foot_r
+					drawbone(playercontroller, player, hud, BoneFNames::pelvis, BoneFNames::spine_03, HealthStateComponent->bHealthProtection);
+					drawbone(playercontroller, player, hud, BoneFNames::pelvis, BoneFNames::calf_r, HealthStateComponent->bHealthProtection);
+					drawbone(playercontroller, player, hud, BoneFNames::calf_r, BoneFNames::foot_r, HealthStateComponent->bHealthProtection);
+					//foot_l
+					drawbone(playercontroller, player, hud, BoneFNames::pelvis, BoneFNames::spine_03, HealthStateComponent->bHealthProtection);
+					drawbone(playercontroller, player, hud, BoneFNames::pelvis, BoneFNames::calf_l, HealthStateComponent->bHealthProtection);
+					drawbone(playercontroller, player, hud, BoneFNames::calf_l, BoneFNames::foot_l, HealthStateComponent->bHealthProtection);
+					//arm_r
+					drawbone(playercontroller, player, hud, BoneFNames::clavicle_r, BoneFNames::neck_01, HealthStateComponent->bHealthProtection);
+					drawbone(playercontroller, player, hud, BoneFNames::clavicle_r, BoneFNames::upperarm_r, HealthStateComponent->bHealthProtection);
+					drawbone(playercontroller, player, hud, BoneFNames::upperarm_r, BoneFNames::lowerarm_r, HealthStateComponent->bHealthProtection);
+					drawbone(playercontroller, player, hud, BoneFNames::lowerarm_r, BoneFNames::hand_r, HealthStateComponent->bHealthProtection);
+					//arm_l
+					drawbone(playercontroller, player, hud, BoneFNames::clavicle_l, BoneFNames::neck_01, HealthStateComponent->bHealthProtection);
+					drawbone(playercontroller, player, hud, BoneFNames::clavicle_l, BoneFNames::upperarm_l, HealthStateComponent->bHealthProtection);
+					drawbone(playercontroller, player, hud, BoneFNames::upperarm_l, BoneFNames::lowerarm_l, HealthStateComponent->bHealthProtection);
+					drawbone(playercontroller, player, hud, BoneFNames::lowerarm_l, BoneFNames::hand_l, HealthStateComponent->bHealthProtection);
+					std::cout << "HDrawText: " << std::endl;
+			
 			}
 		}
 	}
