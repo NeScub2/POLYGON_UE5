@@ -258,11 +258,9 @@ public:
 class ACharacter
 {
 public:
-	char pad_0000[1256]; //0x0000
-	bool issprinting; //0x04E8
-	char pad_04E9[19]; //0x04E9
-	float ControllerRotationX; // 0x4fc(0x04)
-	float ControllerRotationY; // 0x4fc(0x04)
+	char pad_0000[0x63c]; //0x0000
+	float ControllerRotationX; // 0x63c(0x04)
+	float ControllerRotationY; 
 };
 class PlayerController {
 public:

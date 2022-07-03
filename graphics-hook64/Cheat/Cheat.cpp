@@ -97,6 +97,8 @@ void Cheat::Update(AHud* hud, GEngine* gEngine) {
 		hud->DrawCircle( { (float)sizescreenx / 2 ,(float)sizescreeny / 2 }, aimfov, 60, FLinearColor{ 1,1,1,1 });
 	auto localplayerpawn = playercontroller->pawn;
 	if (!localplayerpawn) return;
+	auto localcharacter = playercontroller->character;
+	if (!localcharacter) return;
 	auto localmesh = localplayerpawn->mesh;
 	if (!localmesh) return;
 	auto HealthStateComponent = localplayerpawn->HealthStateComponent;
@@ -143,7 +145,9 @@ void Cheat::Update(AHud* hud, GEngine* gEngine) {
 		if (!mesh) continue;
 		FVector2D headlocscr;
 		FVector pos;
+		FVector campos;
 		mesh->get_bone_location(&pos, BoneFNames::neck_01);
+		localmesh->get_bone_location(&campos, BoneFNames::cam_bone);
 		if (playercontroller->WorldToScreen(pos, &headlocscr))
 		{
 			if (nameesp)
@@ -175,6 +179,26 @@ void Cheat::Update(AHud* hud, GEngine* gEngine) {
 					drawbone(playercontroller, player, hud, BoneFNames::upperarm_l, BoneFNames::lowerarm_l, HealthStateComponent->bHealthProtection);
 					drawbone(playercontroller, player, hud, BoneFNames::lowerarm_l, BoneFNames::hand_l, HealthStateComponent->bHealthProtection);
 			
+			}
+			if (aimbotactive)
+			{
+				if (HealthStateComponent->bHealthProtection) continue;
+				if (!GetAsyncKeyState(VK_MENU)) continue;
+				if (!playercontroller->LineOfSign(playerPawn)) continue;
+				float xc = headlocscr.X - sizescreenx / 2;
+				float yc = headlocscr.Y - sizescreeny / 2;
+				float crosshair_dist = sqrtf((xc * xc) + (yc * yc));
+				float target_dist = FLT_MAX;
+				if (crosshair_dist <= FLT_MAX && crosshair_dist <= target_dist)
+				{
+					if (crosshair_dist < aimfov) // FOV)
+					{
+						FVector2D AngleToTraget1 = functions::GetaimAnglesTo(campos, pos);
+						localcharacter->ControllerRotationX = -AngleToTraget1.X;
+						localcharacter->ControllerRotationY = AngleToTraget1.Y;
+
+					}
+				}
 			}
 		}
 	}
