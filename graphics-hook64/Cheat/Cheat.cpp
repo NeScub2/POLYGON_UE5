@@ -174,7 +174,6 @@ void Cheat::Update(AHud* hud, GEngine* gEngine) {
 					drawbone(playercontroller, player, hud, BoneFNames::clavicle_l, BoneFNames::upperarm_l, HealthStateComponent->bHealthProtection);
 					drawbone(playercontroller, player, hud, BoneFNames::upperarm_l, BoneFNames::lowerarm_l, HealthStateComponent->bHealthProtection);
 					drawbone(playercontroller, player, hud, BoneFNames::lowerarm_l, BoneFNames::hand_l, HealthStateComponent->bHealthProtection);
-					std::cout << "HDrawText: " << std::endl;
 			
 			}
 		}

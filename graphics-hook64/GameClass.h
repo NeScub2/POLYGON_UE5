@@ -225,9 +225,9 @@ public:
 	RootComponent* root; //0x0190
 	char pad_0198[352]; //0x0198
 	class Mesh* mesh; //0x2f8
-	char pad_0300[1024]; //0x0300
-	 UHealthStatsComponent* HealthStateComponent; ///0x700
-	 UWeaponComponent* WeaponComponent; // 0x708
+	char pad_0300[1016]; //0x0300
+	UHealthStatsComponent* HealthStateComponent; ///0x700
+	UWeaponComponent* WeaponComponent; // 0x708
 
 	 inline  void GetActorBounds( bool bOnlyCollidingComponents, FVector* Origin, FVector* BoxExtent, bool bIncludeFromChildActors)
 	 {
