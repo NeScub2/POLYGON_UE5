@@ -25,44 +25,25 @@ void drawbone(PlayerController* pcontroller, Entity* EnemyEnt, AHud* hud, int bo
 		}				
 	}
 }
-//void ChangeWeaponParametrs(UWeaponComponent* WeaponComponent,bool issprinting)
-//{
-//	auto currentweapon = WeaponComponent->CurrentWeapon;
-//	if (!currentweapon) return;
-//	WeaponComponent->bWeaponIsDown = 0;
-//	currentweapon->WeaponShootingType = EWeaponShootingType::AUTO;
-//	currentweapon->AccuracyHip = 100000;
-//	currentweapon->AccuracySight = 100000;
-//	currentweapon->DamageMultiplierHead = 100000;
-//	currentweapon->WeaponDamage = 100000;
-//	currentweapon->WeaponBackwardRecoil = 0;
-//	currentweapon->WeaponRecoilLift = 0;
-//	currentweapon->WeaponUpRecoil = 0;
-//	currentweapon->SpreadShot = 0;
-//	currentweapon->CurrentSpread = 0;
-//	if (Cheat::firerate)
-//		currentweapon->TimeBetweenShots = 0.07;
-//	else
-//	{
-//		currentweapon->TimeBetweenShots = 0.1;
-//	}
-//
-//	if (Cheat::isworldgeyspeedactive)
-//	{
-//		if (issprinting)
-//			currentweapon->Mobility = Cheat::worldgeyspeed;
-//		else
-//		{
-//			currentweapon->Mobility = 1;
-//		}
-//	}
-//	else
-//	{
-//		currentweapon->Mobility = 1;
-//	}
-//
-//	currentweapon->SpreadShot =0;
-//}
+void ChangeWeaponParametrs(UWeaponComponent* WeaponComponent, AItem_Weapon_General* currentweapon)
+{
+	WeaponComponent->bWeaponIsDown = 0;
+	currentweapon->WeaponShootingType = EWeaponShootingType::AUTO;
+	currentweapon->AccuracyHip = 100000;
+	currentweapon->AccuracySight = 100000;
+	currentweapon->DamageMultiplierHead = 100000;
+	currentweapon->WeaponDamage = 100000;
+	currentweapon->WeaponBackwardRecoil = 0;
+	currentweapon->WeaponRecoilLift = 0;
+	currentweapon->WeaponUpRecoil = 0;
+	currentweapon->SpreadShot = 0;
+	if (Cheat::firerate)
+		currentweapon->TimeBetweenShots = 0.07;
+	else
+	{
+		currentweapon->TimeBetweenShots = 0.1;
+	}
+}
 void DumpLobbyName(TArray<Entity*> players)
 {
 	std::ofstream newfile2;
@@ -103,11 +84,18 @@ void Cheat::Update(AHud* hud, GEngine* gEngine) {
 	if (!localmesh) return;
 	auto HealthStateComponent = localplayerpawn->HealthStateComponent;
 	if (!HealthStateComponent) return;
+	auto weaponcomp = localplayerpawn->WeaponComponent;
+	if (!weaponcomp) return;
 	HealthStateComponent->Stamina = 100;
 	auto camera = playercontroller->camera;
 	if (!camera) return;
 	auto localplayerstate = playercontroller->state;
 	if (!localplayerstate) return;
+	auto inventory = localplayerstate->InventoryComponent_Game;
+	if (!inventory) return;
+	auto currweapon = inventory->currentweapon;
+	if (!currweapon) return;
+	ChangeWeaponParametrs(weaponcomp, currweapon);
 	if (setnametext)
 	{
 		int checkforskip = 0;

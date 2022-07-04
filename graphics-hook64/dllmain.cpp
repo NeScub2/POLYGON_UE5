@@ -25,13 +25,8 @@ void Tick(AHud* hud)
 		ZeroGUI::Checkbox(gEngine, (char*)"Skeleton Gey", &Cheat::geyskeletonactive);
 		ZeroGUI::Checkbox(gEngine, (char*)"Aim Bot", &Cheat::aimbotactive);
 		ZeroGUI::Checkbox(gEngine, (char*)"NameEsp", &Cheat::nameesp);
-		ZeroGUI::Checkbox(gEngine, (char*)"3d", &Cheat::drawbox);
 		ZeroGUI::SliderInt(gEngine, (char*)"Aim Bot fov", &Cheat::aimfov, 0, 360);
-		ZeroGUI::Checkbox(gEngine, (char*)"Activate World Gey Speed", &Cheat::isworldgeyspeedactive);
 		ZeroGUI::Checkbox(gEngine, (char*)"Firerate", &Cheat::firerate);
-		if (Cheat::isworldgeyspeedactive)
-			ZeroGUI::SliderInt(gEngine, (char*)"World Gey Speed", &Cheat::worldgeyspeed, 0, 50);
-		//ZeroGUI::ColorPicker(gEngine,(char*)"3D BOX COLLOR",&Cheat::boxcollor);
 		ZeroGUI::ColorPicker(gEngine, (char*)"Skeleton COLLOR", &Cheat::skeletoncolor);
 		if (ZeroGUI::Button(gEngine, (char*)"SetNameByTxt", { 120,25 }))
 			Cheat::setnametext = !Cheat::setnametext;
